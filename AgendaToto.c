@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+void **pBuffer;
+
+void resize() {
+    //adiciona espaço para mais 10 pessoas, para que assim não precise 
+    // ser feito realloc para toda pessoa adicionada
+    pBuffer[2] += 30;
+    pBuffer = realloc(pBuffer, sizeof(void*)* (int) pBuffer[2]);
+}
+
+void push() {
+    //checa se tem espaço alocado, se não, aloca mais
+    if(pBuffer[3] +3>= pBuffer[2]) {
+        resize();
+    }
+    printf("Nome: ");
+    scanf("\n%[^\n]s", &pBuffer[(int)pBuffer[3]]);
+    printf("Idade: ");
+    scanf("%d", &pBuffer[(int)pBuffer[3]+1]);
+    printf("Email: ");
+    scanf("%s", &pBuffer[(int)pBuffer[3]+2]);
+    pBuffer[1]++;
+    pBuffer[3]+=3;
+}
+
+void findAll() {
+    printf("Aqui está todos os %d registros salvos na agenda: \n\n", pBuffer[1]);
+    for(pBuffer[4] = 0; pBuffer[4] < pBuffer[1]; pBuffer[4]++) {
+        printf("Nome: %s\nIdade: %d\nEmail: %s\n\n", &pBuffer[5+(int)pBuffer[4]*3], pBuffer[5+(int)pBuffer[4]*3+1],&pBuffer[5+(int)pBuffer[4]*3+2]);
+    }
+}
+
+void findByPos() {
+    if(pBuffer[1] == 0) {
+        printf("A lista está vazia\n");
+        return 0;
+    }
+    do {
+        printf("Digite a posição da pessoa: ");
+        scanf("%d", &pBuffer[4]);
+    } while(pBuffer[4]<0 || pBuffer[4]>=pBuffer[1]);
+    printf("Nome: %s\nIdade: %d\nEmail: %s\n\n", &pBuffer[5+(int)pBuffer[4]*3], pBuffer[5+(int)pBuffer[4]*3+1],&pBuffer[5+(int)pBuffer[4]*3+2]);
+}
+
+void findByNome() {
+    if(pBuffer[1] == 0) {
+        printf("A lista está vazia\n");
+        return 0;
+    }
+    printf("Digite o nome da pessoa:\n");
+    scanf("%s", &pBuffer[0]);
+    for(pBuffer[4] = 0; pBuffer[4] < pBuffer[1]; pBuffer[4]++) {
+        if(strcmp(&pBuffer[5+(int)pBuffer[4]*3], &pBuffer[0]) == 0) {
+            printf("Posição: %d\nNome: %s\nIdade: %d\nEmail: %s\n\n", pBuffer[4], &pBuffer[5+(int)pBuffer[4]*3], pBuffer[5+(int)pBuffer[4]*3+1],&pBuffer[5+(int)pBuffer[4]*3+2]);
+            return pBuffer[4];
+        }
+    }
+    printf("Pessoa chamada %s não consta na lista\n", &pBuffer[0]);
+}
+
+void pop() {
+    printf("Qual posição deseja remover?\n");
+    scanf("%d", &pBuffer[4]);
+    for(pBuffer[4] = 5+((int)   pBuffer[4]*3); pBuffer[4] < pBuffer[3]; pBuffer[4]++) {     
+        pBuffer[(int)pBuffer[4]] = pBuffer[(int)pBuffer[4]+3];
+        pBuffer[(int)pBuffer[4]+1] = pBuffer[(int)pBuffer[4]+4];
+        pBuffer[(int)pBuffer[4]+2] = pBuffer[(int)pBuffer[4]+5];
+
+    }
+    pBuffer[1]--;
+    pBuffer[3]-=3;
+}
+
+int main() {
+    //operation, len, size, tail, i, pessoas
+    pBuffer = (void **) malloc(sizeof(void*)*35);
+    pBuffer[1] = 0;
+    pBuffer[2] = 35;
+    pBuffer[3] = 5; 
+    do {
+        printf("\nDigite operação:\n1- Adicionar Pessoa (Nome, Idade, email)\n2- Remover Pessoa\n3- Buscar Pessoa\n4- Listar todos\n5- Sair\n");
+        scanf("%d", &pBuffer[0]);
+    
+        switch ((int) pBuffer[0]) {
+        case(1):
+            push();
+            break;
+        case(2):
+            pop();
+            break;
+        case(3):
+            printf("Deseja buscar por posição(1) ou por nome(2)?\n");
+            do {
+                scanf("%d", &pBuffer[0]);
+            } while(pBuffer[0] != 1 && pBuffer[0] != 2);
+            if(pBuffer[0] == 1) {
+                findByPos();
+            } else {
+                findByNome();
+            }
+            break;
+        case(4):
+            findAll();
+            break;
+        case(5):
+            break;
+        default:
+            printf("Digite um valor de entrada valido\n");
+            break;
+        }
+    }while((int)pBuffer[0] != 5);
+    free(pBuffer);
+    return 1;
+}
