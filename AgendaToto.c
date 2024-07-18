@@ -4,6 +4,14 @@
 
 void **pBuffer;
 
+
+/*
+===========================================================
+resize()
+
+Usa realloc para extender a memoria alocada para o pBuffer
+==========================================================
+*/
 void resize() {
     //adiciona espaço para mais 10 pessoas, para que assim não precise 
     // ser feito realloc para toda pessoa adicionada
@@ -11,6 +19,13 @@ void resize() {
     pBuffer = realloc(pBuffer, sizeof(void*)* (int) pBuffer[2]);
 }
 
+/*
+=================================================
+push()
+
+Insere um registro na agenda em ordem alfabetica
+=================================================
+*/
 void push() {
     //checa se tem espaço alocado, se não, aloca mais
     if(pBuffer[3] +3>= pBuffer[2]) {
@@ -38,25 +53,46 @@ void push() {
     pBuffer[3]+=3;
 }
 
+/*
+==================================
+findAll()
+
+Monstra na tela todos os registros
+==================================
+*/
 void findAll() {
     printf("Aqui está todos os %d registros salvos na agenda: \n\n", pBuffer[1]);
-    for(pBuffer[4] = 0; pBuffer[4] < pBuffer[1]; pBuffer[4]++) {
+    for( pBuffer[4] = 0; pBuffer[4] < pBuffer[1]; pBuffer[4]++ ) {
         printf("Nome: %s\nIdade: %d\nEmail: %s\n\n", &pBuffer[5+(int)pBuffer[4]*3], pBuffer[5+(int)pBuffer[4]*3+1],&pBuffer[5+(int)pBuffer[4]*3+2]);
     }
 }
 
+/*
+=================================================
+findByPos
+
+Mostra na tela um registro pela posição na agenda
+=================================================
+*/
 void findByPos() {
-    if(pBuffer[1] == 0) {
+    if( pBuffer[1] == 0 ) {
         printf("A lista está vazia\n");
         return 0;
     }
     do {
         printf("Digite a posição da pessoa: ");
         scanf("%d", &pBuffer[4]);
-    } while(pBuffer[4]<0 || pBuffer[4]>=pBuffer[1]);
+    } while( pBuffer[4]<0 || pBuffer[4]>=pBuffer[1] );
     printf("Nome: %s\nIdade: %d\nEmail: %s\n\n", &pBuffer[5+(int)pBuffer[4]*3], pBuffer[5+(int)pBuffer[4]*3+1],&pBuffer[5+(int)pBuffer[4]*3+2]);
 }
 
+/*
+====================================
+findByNome
+
+Mostra na tela um registro pelo nome
+====================================
+*/
 void findByNome() {
     if(pBuffer[1] == 0) {
         printf("A lista está vazia\n");
@@ -73,6 +109,14 @@ void findByNome() {
     printf("Pessoa chamada %s não consta na lista\n", &pBuffer[0]);
 }
 
+
+/*
+=============================
+Pop()
+
+Remove um item de uma posição
+=============================
+*/
 void pop() {
     if(pBuffer[1] == 0) {
         printf("A lista está vazia\n");
@@ -97,7 +141,7 @@ int main() {
         printf("\nDigite operação:\n1- Adicionar Pessoa (Nome, Idade, email)\n2- Remover Pessoa\n3- Buscar Pessoa\n4- Listar todos\n5- Sair\n");
         scanf("%d", &pBuffer[0]);
     
-        switch ((int) pBuffer[0]) {
+        switch ( (int) pBuffer[0] ) {
         case(1):
             push();
             break;
@@ -109,7 +153,7 @@ int main() {
             do {
                 scanf("%d", &pBuffer[0]);
             } while(pBuffer[0] != 1 && pBuffer[0] != 2);
-            if(pBuffer[0] == 1) {
+            if( pBuffer[0] == 1 ) {
                 findByPos();
             } else {
                 findByNome();
@@ -124,7 +168,7 @@ int main() {
             printf("Digite um valor de entrada valido\n");
             break;
         }
-    }while((int)pBuffer[0] != 5);
-    free(pBuffer);
+    }while( (int)pBuffer[0] != 5 );
+    free( pBuffer );
     return 1;
 }
