@@ -17,11 +17,23 @@ void push() {
         resize();
     }
     printf("Nome: ");
-    scanf("\n%[^\n]s", &pBuffer[(int)pBuffer[3]]);
+    scanf("\n%[^\n]s", &pBuffer[0]);
+    pBuffer[4] = 5;
+    // Buscas pos para inserir
+    while(1) {
+        if(pBuffer[4] >= pBuffer[3] || strcmp(&pBuffer[(int)pBuffer[4]], &pBuffer[0]) > 0) {
+            //copia os outros registros para frente
+            memcpy(&pBuffer[((int)pBuffer[4])+3], &pBuffer[((int)pBuffer[4])],sizeof(void *)*(int)pBuffer[3]-(5+(int)pBuffer[4]+3));
+            pBuffer[(int)pBuffer[4]] = pBuffer[0];
+            break;
+        }
+        pBuffer[4]+=3;
+    }
+    
     printf("Idade: ");
-    scanf("%d", &pBuffer[(int)pBuffer[3]+1]);
+    scanf("%d", &pBuffer[(int)pBuffer[4]+1]);
     printf("Email: ");
-    scanf("%s", &pBuffer[(int)pBuffer[3]+2]);
+    scanf("%s", &pBuffer[(int)pBuffer[4]+2]);
     pBuffer[1]++;
     pBuffer[3]+=3;
 }
@@ -62,19 +74,20 @@ void findByNome() {
 }
 
 void pop() {
+    if(pBuffer[1] == 0) {
+        printf("A lista está vazia\n");
+        return 0;
+    }
     printf("Qual posição deseja remover?\n");
     scanf("%d", &pBuffer[4]);
-    for(pBuffer[4] = 5+((int)   pBuffer[4]*3); pBuffer[4] < pBuffer[3]; pBuffer[4]++) {     
-        pBuffer[(int)pBuffer[4]] = pBuffer[(int)pBuffer[4]+3];
-        pBuffer[(int)pBuffer[4]+1] = pBuffer[(int)pBuffer[4]+4];
-        pBuffer[(int)pBuffer[4]+2] = pBuffer[(int)pBuffer[4]+5];
-
-    }
+    //copia os outros registro 3 pos para tras, para assim, sobreescrever o valor a ser removido
+    memcpy(&pBuffer[5+((int)pBuffer[4]*3)], &pBuffer[5+((int)pBuffer[4]*3)+3],sizeof(void *)*(int)pBuffer[3]-(5+(int)pBuffer[4]+3));
     pBuffer[1]--;
     pBuffer[3]-=3;
 }
 
 int main() {
+    //as 5 primeiras pocições são alocadas para variaveis, o resto é a agenda
     //operation, len, size, tail, i, pessoas
     pBuffer = (void **) malloc(sizeof(void*)*35);
     pBuffer[1] = 0;
