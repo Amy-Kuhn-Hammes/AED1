@@ -4,7 +4,6 @@
 
 void **pBuffer;
 
-
 /*
 ===========================================================
 resize()
@@ -123,9 +122,25 @@ void pop() {
         return 0;
     }
     printf("Qual posição deseja remover?\n");
-    scanf("%d", &pBuffer[4]);
-    //copia os outros registro 3 pos para tras, para assim, sobreescrever o valor a ser removido
-    memcpy(&pBuffer[5+((int)pBuffer[4]*3)], &pBuffer[5+((int)pBuffer[4]*3)+3],sizeof(void *)*(int)pBuffer[3]-(5+(int)pBuffer[4]+3));
+    scanf("%d", &pBuffer[0]);
+    //remove na frente da fila e armaza apos o final da fila
+    for(pBuffer[4] = 0; pBuffer[4] < pBuffer[0];pBuffer[4]++) {
+        if((int)pBuffer[3]+(int)pBuffer[4]*3 < (int)pBuffer[2]) {
+            resize();
+        }
+        memcpy(&pBuffer[(int)pBuffer[3]+(int)pBuffer[4]*3],&pBuffer[5],sizeof(void *) * 3);
+        memcpy(&pBuffer[5], &pBuffer[8], sizeof(void *) * 3 * (int)pBuffer[1]);
+    }
+    //remove o ser a removido
+    memcpy(&pBuffer[5], &pBuffer[8], sizeof(void *) * 3 * (int)pBuffer[1]);
+    //remove do armazenamento e reinsere no lugar
+    for(pBuffer[4] = 0; pBuffer[4] < pBuffer[0];pBuffer[4]++) {
+        memcpy(&pBuffer[8], &pBuffer[5], sizeof(void *) * 3 * (int)pBuffer[1]);
+        memcpy(&pBuffer[5], &pBuffer[(int)pBuffer[3]+((int)pBuffer[0]-1 - (int)pBuffer[4])*3],sizeof(void *) * 3);
+    }
+
+    //move a memoria para frente
+    //memcpy(&pBuffer[5+((int)pBuffer[4]*3)], &pBuffer[5+((int)pBuffer[4]*3)+3],sizeof(void *)*(int)pBuffer[3]-(5+(int)pBuffer[4]+3));
     pBuffer[1]--;
     pBuffer[3]-=3;
 }
