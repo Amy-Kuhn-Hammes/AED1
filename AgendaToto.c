@@ -32,12 +32,12 @@ void push() {
     }
     printf("Nome: ");
     scanf("\n%[^\n]s", &pBuffer[0]);
-    pBuffer[4] = 5;
+    pBuffer[4] = 6;
     // Buscas pos para inserir
     while(1) {
         if(pBuffer[4] >= pBuffer[3] || strcmp(&pBuffer[(int)pBuffer[4]], &pBuffer[0]) > 0) {
             //copia os outros registros para frente
-            memcpy(&pBuffer[((int)pBuffer[4])+3], &pBuffer[((int)pBuffer[4])],sizeof(void *)*(int)pBuffer[3]-(5+(int)pBuffer[4]+3));
+            memcpy(&pBuffer[((int)pBuffer[4])+3], &pBuffer[((int)pBuffer[4])],sizeof(void *)*(int)pBuffer[3]-(6+(int)pBuffer[4]+3));
             pBuffer[(int)pBuffer[4]] = pBuffer[0];
             break;
         }
@@ -62,7 +62,7 @@ Monstra na tela todos os registros
 void findAll() {
     printf("Aqui está todos os %d registros salvos na agenda: \n\n", pBuffer[1]);
     for( pBuffer[4] = 0; pBuffer[4] < pBuffer[1]; pBuffer[4]++ ) {
-        printf("Nome: %s\nIdade: %d\nEmail: %s\n\n", &pBuffer[5+(int)pBuffer[4]*3], pBuffer[5+(int)pBuffer[4]*3+1],&pBuffer[5+(int)pBuffer[4]*3+2]);
+        printf("Nome: %s\nIdade: %d\nEmail: %s\n\n", &pBuffer[6+(int)pBuffer[4]*3], pBuffer[6+(int)pBuffer[4]*3+1],&pBuffer[6+(int)pBuffer[4]*3+2]);
     }
 }
 
@@ -82,7 +82,7 @@ void findByPos() {
         printf("Digite a posição da pessoa: ");
         scanf("%d", &pBuffer[4]);
     } while( pBuffer[4]<0 || pBuffer[4]>=pBuffer[1] );
-    printf("Nome: %s\nIdade: %d\nEmail: %s\n\n", &pBuffer[5+(int)pBuffer[4]*3], pBuffer[5+(int)pBuffer[4]*3+1],&pBuffer[5+(int)pBuffer[4]*3+2]);
+    printf("Nome: %s\nIdade: %d\nEmail: %s\n\n", &pBuffer[6+(int)pBuffer[4]*3], pBuffer[6+(int)pBuffer[4]*3+1],&pBuffer[6+(int)pBuffer[4]*3+2]);
 }
 
 /*
@@ -100,8 +100,8 @@ void findByNome() {
     printf("Digite o nome da pessoa:\n");
     scanf("%s", &pBuffer[0]);
     for(pBuffer[4] = 0; pBuffer[4] < pBuffer[1]; pBuffer[4]++) {
-        if(strcmp(&pBuffer[5+(int)pBuffer[4]*3], &pBuffer[0]) == 0) {
-            printf("Posição: %d\nNome: %s\nIdade: %d\nEmail: %s\n\n", pBuffer[4], &pBuffer[5+(int)pBuffer[4]*3], pBuffer[5+(int)pBuffer[4]*3+1],&pBuffer[5+(int)pBuffer[4]*3+2]);
+        if(strcmp(&pBuffer[6+(int)pBuffer[4]*3], &pBuffer[0]) == 0) {
+            printf("Posição: %d\nNome: %s\nIdade: %d\nEmail: %s\n\n", pBuffer[4], &pBuffer[6+(int)pBuffer[4]*3], pBuffer[6+(int)pBuffer[4]*3+1],&pBuffer[6+(int)pBuffer[4]*3+2]);
             return pBuffer[4];
         }
     }
@@ -122,36 +122,37 @@ void pop() {
         return 0;
     }
     printf("Qual posição deseja remover?\n");
-    scanf("%d", &pBuffer[0]);
+    scanf("%d", &pBuffer[5]);
     //remove na frente da fila e armaza apos o final da fila
-    for(pBuffer[4] = 0; pBuffer[4] < pBuffer[0];pBuffer[4]++) {
+    for(pBuffer[4] = 0; pBuffer[4] < pBuffer[5];pBuffer[4]++) {
         if((int)pBuffer[3]+(int)pBuffer[4]*3 < (int)pBuffer[2]) {
             resize();
         }
-        memcpy(&pBuffer[(int)pBuffer[3]+(int)pBuffer[4]*3],&pBuffer[5],sizeof(void *) * 3);
-        memcpy(&pBuffer[5], &pBuffer[8], sizeof(void *) * 3 * (int)pBuffer[1]);
+        memcpy(&pBuffer[(int)pBuffer[3]+(int)pBuffer[4]*3],&pBuffer[6],sizeof(void *) * 3);
+        memcpy(&pBuffer[6], &pBuffer[8], sizeof(void *) * 3 * (int)pBuffer[1]);
     }
     //remove o ser a removido
-    memcpy(&pBuffer[5], &pBuffer[8], sizeof(void *) * 3 * (int)pBuffer[1]);
+    memcpy(&pBuffer[6], &pBuffer[8], sizeof(void *) * 3 * (int)pBuffer[1]);
     //remove do armazenamento e reinsere no lugar
-    for(pBuffer[4] = 0; pBuffer[4] < pBuffer[0];pBuffer[4]++) {
-        memcpy(&pBuffer[8], &pBuffer[5], sizeof(void *) * 3 * (int)pBuffer[1]);
-        memcpy(&pBuffer[5], &pBuffer[(int)pBuffer[3]+((int)pBuffer[0]-1 - (int)pBuffer[4])*3],sizeof(void *) * 3);
+    for(pBuffer[4] = 0; pBuffer[4] < pBuffer[5];pBuffer[4]++) {
+        memcpy(&pBuffer[8], &pBuffer[6], sizeof(void *) * 3 * (int)pBuffer[1]);
+        memcpy(&pBuffer[6], &pBuffer[(int)pBuffer[3]+((int)pBuffer[5]-1 - (int)pBuffer[4])*3],sizeof(void *) * 3);
     }
 
     //move a memoria para frente
-    //memcpy(&pBuffer[5+((int)pBuffer[4]*3)], &pBuffer[5+((int)pBuffer[4]*3)+3],sizeof(void *)*(int)pBuffer[3]-(5+(int)pBuffer[4]+3));
+    //memcpy(&pBuffer[6+((int)pBuffer[4]*3)], &pBuffer[6+((int)pBuffer[4]*3)+3],sizeof(void *)*(int)pBuffer[3]-(6+(int)pBuffer[4]+3));
     pBuffer[1]--;
     pBuffer[3]-=3;
 }
 
 int main() {
-    //as 5 primeiras pocições são alocadas para variaveis, o resto é a agenda
-    //operation, len, size, tail, i, pessoas
-    pBuffer = (void **) malloc(sizeof(void*)*35);
+    //as 6 primeiras pocições são alocadas para variaveis, o resto é a agenda
+    //operation, len, size, tail, i, aux, pessoas
+    pBuffer = (void **) malloc(sizeof(void*)*36);
     pBuffer[1] = 0;
-    pBuffer[2] = 35;
-    pBuffer[3] = 5; 
+    pBuffer[2] = 36;
+    pBuffer[3] = 6; 
+    pBuffer[5] = NULL;
     do {
         printf("\nDigite operação:\n1- Adicionar Pessoa (Nome, Idade, email)\n2- Remover Pessoa\n3- Buscar Pessoa\n4- Listar todos\n5- Sair\n");
         scanf("%d", &pBuffer[0]);
@@ -166,9 +167,9 @@ int main() {
         case(3):
             printf("Deseja buscar por posição(1) ou por nome(2)?\n");
             do {
-                scanf("%d", &pBuffer[0]);
-            } while(pBuffer[0] != 1 && pBuffer[0] != 2);
-            if( pBuffer[0] == 1 ) {
+                scanf("%d", &pBuffer[5]);
+            } while(pBuffer[5] != 1 && pBuffer[5] != 2);
+            if( pBuffer[5] == 1 ) {
                 findByPos();
             } else {
                 findByNome();
