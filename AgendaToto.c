@@ -1,3 +1,11 @@
+/*
+===============
+Amy Kuhn Hammes
+
+Agenda pBuffer
+===============
+*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
